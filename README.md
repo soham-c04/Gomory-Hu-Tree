@@ -42,7 +42,8 @@ between the vertices (Corollary to 1).
 - Any Testcase for which output of both codes is different is printed.
 - **Ctrl+C** to stop script.
 
-## Implementation 
+## Implementation
+- [**My Report**](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Report/Report.pdf)
 - [**Static_GomoryHu_Tree.cpp:**](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Static_GomoryHu_Tree.cpp) Based on [Very Simple Methods for All Pairs Network Flow Analysis](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Research%20Papers/1990%20-%20gusfield.Gomory-Hu%20Tree.pdf) ([Website](https://epubs.siam.org/doi/10.1137/0219009)).
 - [**Equivalent_Flow_Tree_gusfield.cpp**](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Equivalent_Flow_Tree_gusfield.cpp) Based on [Very Simple Methods for All Pairs Network Flow Analysis](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Research%20Papers/1990%20-%20gusfield.Gomory-Hu%20Tree.pdf) ([Website](https://epubs.siam.org/doi/10.1137/0219009)).
 - [**Dynamic_GomoryHu_Tree.cpp:**](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Dynamic_GomoryHu_Tree.cpp) Based on [Dynamic Gomory-Hu Tree Construction -- fast and simple](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Research%20Papers/2013%20-%20Dynamic%20Gomory-Hu%20Tree%20construction%20-%20fast%20and%20simple%20-%20B.pdf) ([Website](https://arxiv.org/abs/1310.0178)).
