@@ -1,0 +1,11 @@
+Applications of Dynamic GomoryHu Tree:-
+1. Parametric analysis on cut-trees and its application on a protein clustering problem
+Concepts:- Clustering of protein structures into strongly connected groups (Unit-edge weights).
+	 - Parametric analysis for identifying sensitive edges (based on parameter lambda).
+	 - Identifying real PPI.
+	 - Mitrofanova (2009): Efficient and robust prediction algorithms for protein complexes using 	   Gomory–Hu trees.
+2. Markov Clustering Algorithm (MCL)
+	 - MCL-CAw: a refinement of MCL for detecting yeast complexes from weighted PPI networks by 	   incorporating core-attachment structure Sriganesh Srihari 1, Kang Ning, Hon Wai Leong
+3. Connectivity and Clustering - Page 16
+4. Page 122 - Computer vision, more precisely, image segmentation in videos, is one field where such 	      incremental flow updates are actually used. 
+5. Page 189 - Graph Clustering and Cohesive Subsets

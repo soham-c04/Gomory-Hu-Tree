@@ -1,0 +1,11 @@
+# Executable
+*.exe
+*.out
+
+# Stress Test Temporary Files
+input_file
+myAnswer
+correctAnswer
+
+# Windows
+.vscode/
