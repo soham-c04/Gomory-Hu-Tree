@@ -21,7 +21,7 @@ between the vertices (Corollary to 1).
 - **Argument 3,4** paths are relative to "Implementation/Test/" directory.
 - Output is appended to "benchmark-<code.cpp>-<brute.cpp>-<gen.cpp>.csv" in the format "<number_of_nodes>,<code(ms)>,<brute(ms)>"
 - If all iterations are done then Choose (y/n) for logarithmic plotting of that .csv file.
-- Use [Plotter.py](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Plotter.py) to plot (takes relative path to .csv file as input).
+- Use [Plotter.py](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/Plotter.py) to plot (takes relative path to .csv file as input).
 
 ### Static Gomory-Hu Tree
 <img src="benchmarks/benchmark-Static_GomoryHu_Tree-brute-gen_plot.png" width="50%">
