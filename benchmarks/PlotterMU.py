@@ -79,11 +79,30 @@ grouped = df.groupby("Nodes", as_index=False)["RelativeUpdatePercent"].mean()
 
 nodes = grouped["Nodes"]
 ratio_percent = grouped["RelativeUpdatePercent"]
+overall_mean = grouped["RelativeUpdatePercent"].mean()
 
 # Plot
 plt.figure(figsize=(10, 6))
 
 plt.plot(nodes, ratio_percent, label="Update_Time / Create_Time (%)")
+plt.axhline(
+    y=overall_mean,
+    color="red",
+    linestyle="--",
+    linewidth=2,
+    label=f"Overall mean = {overall_mean:.2f}%"
+)
+
+plt.text(
+    nodes.max(),
+    overall_mean,
+    f"{overall_mean:.2f}%",
+    ha="right",
+    va="bottom",
+    fontsize=10,
+    color="orange",       
+    fontweight="bold"
+)
 
 plt.xlabel("Number of Nodes")
 plt.ylabel("Update Time as % of Create Time")
