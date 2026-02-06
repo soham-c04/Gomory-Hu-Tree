@@ -63,5 +63,5 @@ between the vertices (Corollary to 1).
     - [benchMU.sh](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/benchMU.sh) - `./benchMU.sh [code.cpp] [number_of_iterations] [gen.cpp]`
     - [Dynamic_GomoryHu_Tree_MU.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/Dynamic_GomoryHu_Tree_MU.cpp) - Prints the time requried for Each Update.
     - [gen_MU.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/gen_MU.cpp) - Generates Random Graph with Multiple Update Testcases.
-    - [PlotterMU.py](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/Plotter.py) - Plots mean and max. %age of time required for each subsequent update w.r.t Initial Tree construction time.<br>
+    - [PlotterMU.py](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/PlotterMU.py) - Plots mean and max. %age of time required for each subsequent update w.r.t Initial Tree construction time.<br>
 - **Example:**<br><img src="benchmarks/example_benchMU.png" width="400">
