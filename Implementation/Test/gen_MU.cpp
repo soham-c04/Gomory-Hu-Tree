@@ -21,7 +21,7 @@ ll rand_num(ll a, ll b){
 }
 
 int main(int argc, char* argv[]){
-	int n=rand_num(200, 400);
+	int n=rand_num(100, 500);
 	int M=n*(n-1)/2;
 	int m=rand_num(n-1,M);
 	pair<int,int> all_edges[M];
@@ -33,8 +33,8 @@ int main(int argc, char* argv[]){
 	vector<tuple<int,int,ll>> edges;
 	int cap[n+1][n+1];
 	memset(cap, 0, sizeof(cap));
-	int W = 25;
-	
+	int W = 50;
+
 	for(int t=0;t<m;t++){
 		int x = rand_num(t,m-1);
 		auto [u,v]=all_edges[x];
@@ -43,20 +43,20 @@ int main(int argc, char* argv[]){
 		edges.push_back({u,v,w});
 		cap[u][v] = cap[v][u] = w;
 	}
-	
+
 	cout<<n<<" "<<edges.size()<<"\n";
 	for(auto [u,v,w]:edges) cout<<u<<" "<<v<<" "<<w<<"\n";
-	
-	// Static Gomory-Hu Tree
-//	cout<<"1\n0 0 0\n";
-//	return 0;
-	
-	// Single Dynamic Update
-	cout<<"1\n";
-	int u = rand_num(1,n-1);
-	int v = rand_num(u+1,n);
-	int delta = rand_num(-cap[u][v],W);
-	cout<<u<<" "<<v<<" "<<delta<<"\n";
-	
+
+	// Multiple Dynamic Updates
+	int q = rand_num(20,40);
+	cout<<q<<"\n";
+	while(q--){
+		int u = rand_num(1,n-1);
+		int v = rand_num(u+1,n);
+		int delta = rand_num(-cap[u][v],W/2);
+		cout<<u<<" "<<v<<" "<<delta<<"\n";
+		cap[u][v] = cap[v][u] = cap[u][v]+delta;
+	}
+
 	return 0;
 }
