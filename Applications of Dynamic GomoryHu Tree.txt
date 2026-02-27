@@ -7,5 +7,7 @@ Concepts:- Clustering of protein structures into strongly connected groups (Unit
 2. Markov Clustering Algorithm (MCL)
 	 - MCL-CAw: a refinement of MCL for detecting yeast complexes from weighted PPI networks by 	   incorporating core-attachment structure Sriganesh Srihari 1, Kang Ning, Hon Wai Leong
 3. Connectivity and Clustering - Page 16
-4. Page 122 - Computer vision, more precisely, image segmentation in videos, is one field where such 	      incremental flow updates are actually used. 
-5. Page 189 - Graph Clustering and Cohesive Subsets
+4. Page 189 - Graph Clustering and Cohesive Subsets
+5. Page 122 - Computer vision, more precisely, image segmentation in videos, is one field where such 	      incremental flow updates are actually used.
+6. Finding bottlenecks in flow networks i.e. finding pair of 2 most vulnerable nodes in a network.
+7. Reliability and Robustness of networks (Similar to 6)
