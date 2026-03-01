@@ -58,10 +58,10 @@ between the vertices (Corollary to 1).
 - [brute.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/brute.cpp) - Runs maxflow algorithm for each $\binom{n}{2}$ pairs of vertices.
 - [reusing_Static_GomoryHu_Tree.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/reusing_Static_GomoryHu_Tree.cpp) - Reconstructs Gomory-Hu Tree from scratch for each edge update. 
 - [gen.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/gen.cpp) - Generates Testcases (Random Graphs) for Static and SingleUpdate Dynamic Gomory-Hu Tree.
-- **Multiple Updates:**
+- **Multiple Updates (MU):**
     - Testing Dynamic Gomory-Hu Tree against Multiple Updates per Graph.
     - [benchMU.sh](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/benchMU.sh) - `./benchMU.sh [code.cpp] [number_of_iterations] [gen.cpp]`
     - [Dynamic_GomoryHu_Tree_MU.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/Dynamic_GomoryHu_Tree_MU.cpp) - Prints the time requried for Each Update.
     - [gen_MU.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/gen_MU.cpp) - Generates Random Graph with Multiple Update Testcases.
-    - [PlotterMU.py](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/PlotterMU.py) - Plots mean and max. %age of time required for each subsequent update w.r.t Initial Tree construction time.<br>
+    - [PlotterMU.py](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/PlotterMU.py) - Plots mean %age of time required for each subsequent update w.r.t Initial Tree construction time.<br>
 - **Example:**<br><img src="benchmarks/example_benchMU.png" width="400">
