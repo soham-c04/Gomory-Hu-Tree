@@ -65,3 +65,31 @@ between the vertices (Corollary to 1).
     - [gen_MU.cpp](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Test/gen_MU.cpp) - Generates Random Graph with Multiple Update Testcases.
     - [PlotterMU.py](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/benchmarks/PlotterMU.py) - Plots mean %age of time required for each subsequent update w.r.t Initial Tree construction time.<br>
 - **Example:**<br><img src="benchmarks/example_benchMU.png" width="400">
+<br><br>
+
+## Application
+
+### [<u>Image Segmentation</u>](https://github.com/soham-c04/Gomory-Hu-Tree/tree/main/Implementation/Image%20Segmentation)
+**<u>How to Run:</u>**
+- Go to UCRT64 terminal(or whichever compiler is being used) and install **opencv** using - `pacman -S mingw-w64-ucrt-x86_64-opencv`
+- Add the following commands when calling the compiler - `-std=c++20 -O3 -Wl,--stack,1073741824`
+- Add the following commands when calling the linker - `-lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc`
+- Include the folder **include/opencv4** in *C++ includes*.
+
+Image segmentation is done based on an Unsupervised-Flow-based-Hierarchical-Clustering-Algorithm as mentioned in [this paper](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Research%20Papers/1993%20-%20Image%20Segmentation%20via%20Clustering%20-%20A%2B.pdf).
+
+The [given code](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Image%20Segmentation/FlowbasedHierarchicalClustering.cpp) is an implementation of the algorithm mentioned in the above paper.
+
+In the [images](https://github.com/soham-c04/Gomory-Hu-Tree/tree/main/Implementation/Image%20Segmentation/images) folder are the segmented images produced after running the algorithm.
+
+| [Image](https://github.com/soham-c04/Gomory-Hu-Tree/tree/main/Implementation/Image%20Segmentation/images) | Pixels | Execution Time (in sec) |
+|:----------:|:----------:|:----------:|
+| [basic3.png](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Image%20Segmentation/images/basic3.png)  | $100 \times 100 = 10^4$ | 0 |
+| [login.png](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Image%20Segmentation/images/login.png)  | $170 \times 94 = 1.6 \times 10^4$ | 1 |
+| [paint.png](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Image%20Segmentation/images/paint.png)  | $465 \times 287 = 1.3 \times 10^5$ | 32 |
+| [paint1.png](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Image%20Segmentation/images/paint1.png)  | $617 \times 317 = 2 \times 10^5$ | 267 |
+| [paint2.png](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Image%20Segmentation/images/paint2.png)  | $480 \times 331 = 1.6 \times 10^5$ | 175 |
+| [sample2.png](https://github.com/soham-c04/Gomory-Hu-Tree/blob/main/Implementation/Image%20Segmentation/images/sample2.png)  | $400 \times 788 = 3.1 \times 10^5$ | 109 |
+<br>
+
+**NOTE:**  HyperParameters - *sigma*, *cMAX*, *FACTOR*, *WINDOW* affect both final clusters and Execution Time (Time required for Clustering), whereas *MIN_SIZE* (minimum no. of pixels that should be present in a cluster) affects only the final cluster.
