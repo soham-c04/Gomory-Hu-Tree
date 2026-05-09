@@ -1,0 +1,76 @@
+\chapter{Gomory-Hu Tree}
+    \section{Definition}
+
+    {\large \bf Gomory-Hu Tree} is a weighted tree $T(G) = (V,E_T,c_T)$ on the vertices of an undirected (weighted) graph $G = (V,E,c)$ (with edges not necessarily in $G$) such that each $\{u,v\}\in E_T$ induces a minimum \textit{u-v-}cut in $G$ *by decomposing $T(G)$ into two connected components) and such that $c_T(\{u,v\})$ is equal to the cost of the induced cut. The cuts induced by $T(G)$ are non-crossing and for each $\{s,t\} \subseteq V$ each cheapest edge on the path $\pi (u,v)$ between $s$ and $t$ in $T(G)$ corresponds to a minimum \textit{s-t-}cut in $G$. A Gomory-Hu tree thus represents $n-1$ non-crossing minimum \textit{s-t-cuts}.
+    
+    \textit{Reconnecting} an edge in $T(G)$ means replacing the edge by another edge with the same attributes without creating a cycle. \textit{Step pairs} refers to the cut pairs that are considered for the computation of minimum separating cuts during the construction.
+
+    \vspace{5mm}
+    {\large \bf Flow-Equivalent Tree} is a weighted tree $T(G) = (V,E_T,c_T)$ on the vertices of $G$ having cost function $c_T:E_T\xrightarrow{}R_0^{+}$ such that the cost $c_T(\{s,t\})$ of each edge $\{s,t\}$ corresponds to $\lambda_G (s,t)$. Hence, it also holds that edge connectivity $\lambda_G (s,t)$ for an arbitrary vertex pair $\{s,t\}\subseteq V$ is given by the cost of the cheapest edge on teh path between $s$ and $t$ in $T(G)$ i.e. $\lambda_{T(G)} (s,t) = \lambda_G (s,t)$. Hence, Gomory-Hu trees are a subclass of flow-equivalent trees.
+
+    \section{Construction algorithm}
+
+    {\large \bf Lemma 2.1:} \textit{A set $\mathcal{H}$ of $n-1$ cuts is a Gomory-Hu set if and only if the cuts in $\mathcal{H}$ are pairwise non-crossing and for each cut exists a cut-pair that is exclusively separated by this cut, that is, not separated by any other cut in $\mathcal{H}$.}
+    
+    \vspace{3mm}
+    \noindent\textit{Proof:} Clearly, each Gomory-Hu tree satisfies the conditions of Lemma 2.1. Now let $\mathcal{H}$ denote a set of $n-1$ pairwise non-crossing cuts and $\mathcal{P}$ a set of $|\mathcal{H}|$ exclusively separated cur pairs. Since cuts in $\mathcal{H}$ are non-crossing, their cuts are nested, and since there are $n-1$ of these cuts, there exists exactly one vertex pair for each cut that is exclusively separated by this cut. Hence, these vertex pairs must correspond to the cut pairs in $\mathcal{P}$. Connecting cut pairs in $\mathcal{P}$ by edges then yields a Gomory-Hu tree that represents $\mathcal{H}.$
+
+    \vspace{5mm}
+    \noindent{\large \bf Lemma 2.2:} (Non-Crossing Lemma) \textit{Let $(X,V\backslash X)$ be a minimum x-y-cut in G, with $x\in X$. Let $(H,V\backslash H)$ be a minimum u-v-cut, with $u,v\in V\backslash X$ and $x\in H$. Then the cut $(H\cup X, (V\backslash H)\cap (V\backslash X))$ is also a minimum u-v-cut.}
+    \vspace{5mm}
+
+    \noindent The idea of the Algorithm proposed by Gomory and Hu is to iteratively construct a Gomory-Hu set by choosing in each step a vertex pair (\textit{step pair}) that is not yet separated and computing a minimum separating cut for this pair. To ensure that each cut is non-crossing (from Lemma 2.1) Gomory and Hu contract at least one cut side of each cut found so far and compute the minimum separating cut in the resulting graph. This is due to the result of Lemma 2.2 (Non-Crossing Lemma) that there always exists a minimum separating cut that does not cross any of the previous cuts. 
+    
+    The following pseudocode is for the Algorithm 1 by Gomory and Hu for the construction of Cut-Tree. The \textit{intermediate tree} $T_* = (V_*,E_*,c_*)$ is initialized as an isolated, edgeless node containing all original vertices. Then, until each node of $T_*$ is a singleton node, a node $S\in V_*$ is \textit{split} and an edge representing a new cut ia added to $E_*$. Now, supernodes $S'\ne S$ which are related to cut sides of previously found cuts, are dealt with by contracting in G whole subtrees $N_j$ of $S$ in $T_*$, connected to $S$ via edges $\{S,S_j\}$, to single nodes $[N_j]$ before cutting, whihc yields $G_S$. The split of $S$ into $S_u$ and $S_v$ is then defined by a minimum u-v-cut (split cut) in $G_S$ (with \textit{step pair} $\{u,v\} \subseteq S$), which does not cross any of the previously used cuts due to the contraction technique. Reacll that this split cut in $G_S$ also induces a minimum \textit{u-v-}cut in $G$, due to the Non-Crossing Lemma (2). After splitting, the edge $\{S_u,S_v\}$ is added to $E_*$, and each $N_j$ is reconnected, again by $S_j$, to either $S_u$ or $S_v$ depending on which side of the cut $[N_j]$ ended up. This reconnection ensures that the edge $\{S_u,S_v\}$ indeed represents the split cut.
+
+    \vspace{5mm}
+    \begin{algorithm}[H]
+        \hrulefill
+        
+        \textbf{Algorithm 1:} Gomory--Hu
+        
+        \hrulefill
+        \vspace{2mm}
+        
+        \DontPrintSemicolon
+        
+        \KwIn{Graph $G = (V,E,c)$}
+        \KwOut{Gomory--Hu tree of $G$}
+        
+        Initialize $T_* := (V_*, E_*, c_*)$ with $V_* \gets \{V\}$, $E_* \gets \varnothing$, $c_*$ empty\;
+        
+        \While{$\exists S \in V_* \text{ with } |S| > 1$}{
+            $\{u,v\} \gets$ arbitrary pair in $S$ \tcp*{unfold node}
+        
+            \ForEach{$S_j$ adjacent to $S$ in $T_*$}{
+                $N_j \gets$ subtree of $S$ in $T_*$ with $S_j \in N_j$\;
+            }
+        
+            $G_S = (V_S,E_S,c_S) \gets$ contract each $N_j$ to $[N_j]$ in $G$ \tcp*{contraction}
+        
+            $(U, V \setminus U) \gets$ min-$u$-$v$-cut in $G_S$, cost $\lambda_{G_S}(u,v)$\;
+        
+            $S_u \gets S \cap U$, \quad $S_v \gets S \cap (V_S \setminus U)$ \tcp*{split $S = S_u \cup S_v$}
+        
+            $V_* \gets (V_* \setminus \{S\}) \cup \{S_u, S_v\}$\;
+        
+            $E_* \gets E_* \cup \{\{S_u,S_v\}\}$\;
+            $c_*(S_u,S_v) \gets \lambda_{G_S}(u,v)$\;
+        
+            \ForEach{former edges $e_j = \{S, S_j\}$ in $E_*$}{
+                \eIf{$[N_j] \in U$}{
+                    $e_j \gets \{S_u, S_j\}$ \tcp*{reconnect to $S_u$}
+                }{
+                    $e_j \gets \{S_v, S_j\}$ \tcp*{reconnect to $S_v$}
+                }
+            }
+        }
+        
+        \Return{$T_*$}\;
+        
+        \vspace{2mm}
+        \hrulefill
+    \end{algorithm}
+
+    \enlargethispage{\baselineskip}
+    \enlargethispage{\baselineskip}

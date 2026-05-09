@@ -1,0 +1,73 @@
+% This report was inspired from templates-
+% 1. https://www.overleaf.com/latex/templates/thesis-template-faculty-of-computer-science-university-of-vienna/whyzmtqggxzz
+% 2. https://www.overleaf.com/latex/templates/synopsis-template-university-of-hyderabad/fknzkwvjbhfx
+\DeclareOldFontCommand{\bf}{\bfseries}{\textbf}
+\let\cleardoublepage\clearpage
+
+\documentclass[oneside, hidelinks]{UniVieCS_Thesis}
+\input{packages_macros}
+\makeglossaries
+\KOMAoptions{open=any}
+\usepackage[ngerman, british]{babel}
+\usepackage{amssymb}
+\renewcommand*\chapterheadstartvskip{\vspace*{0pt}}
+
+\usepackage{tikz}
+\newcommand{\circledU}{%
+  \tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=0.5pt] (char) {$\scriptscriptstyle U$};
+  }%
+}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup[figure]{skip=5pt}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}              
+\renewcommand{\headrulewidth}{0.4pt}   
+\renewcommand{\footrulewidth}{0pt}    
+
+\fancypagestyle{plain}{
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+\begin{document}
+
+    \input{A) Front Matter/cover}
+    
+    \clearpage
+	\frontmatter{}
+	\input{A) Front Matter/abstract}
+	\pagebreak
+	
+    \microtypesetup{protrusion=false}
+    \tableofcontents{} 
+    
+    \textbf{\newline C++ implementation --}
+    \href{https://github.com/soham-c04/Gomory-Hu-Tree}{\textcolor{blue}{Github Repo}}
+    
+    \cleardoublepage{}
+    \microtypesetup{protrusion=true}
+    
+	\pagebreak
+	
+	\mainmatter{}
+    \input{B) Chapters/1_Introduction}
+    \input{B) Chapters/2_Gomory_Hu_Tree}
+    \input{B) Chapters/3_Cut_Tree_algorithm_by_Gusfield}
+    \input{B) Chapters/4_Dynamic_Gomory_Hu_Tree}
+    \input{B) Chapters/5_Applications_of_Gomory_Hu_Tree}
+    \input{B) Chapters/6_Image_Segmentation}
+    \input{B) Chapters/7_Future_Work}
+
+    \nocite{*}
+	\bibliographystyle{alpha}
+	\bibliography{bibliography}
+	
+	
+\end{document}

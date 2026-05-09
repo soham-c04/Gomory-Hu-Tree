@@ -1,0 +1,49 @@
+\chapter{Introduction}
+    In this project, we look at algorithms for solving graph-theoretic problems related to Multi-Terminal minimum cut - maximum flow in a network. It consists of 4 parts - 
+    \begin{enumerate}
+        \item {Gomory-Hu Cut Tree}
+        \item {Modified Cut-Tree algorithm by Gusfield}
+        \item {Dynamic Gomory-Hu Tree}
+        \item {Future Work}
+    \end{enumerate}
+
+    \section{Overview}
+    We here give a brief insight to the first 3 parts from above.
+    
+    \vspace{5mm}
+    \noindent{\large\bf Part I: Gomory-Hu Tree\\[1mm]}
+    A Gomory-Hu tree is an undirected, weighted tree on the vertices of a given graph such that each edge in the tree represents a minimum separating cut in the underlying graph with respect to its incident
+    vertices. The cost of the cut is given by the cost of the tree edge. From this property it follows directly that a minimum separating cut for two vertices that are not adjacent in the tree is given by a cheapeast tree edge on the unique path between both vertices. We first give a description of the very first algorithm proposed by Gomory and Hu for constructing a Cut-Tree on general graphs and explain the ideas and mechanisms it relies on. This lays the basics for newer algorithmic approaches to constructing Cut-Trees such as the one given by Gusfield in Part II.
+
+    \vspace{5mm}
+    \noindent{\large \bf Part II: Implementation of Cut Tree by Gusfield\\[1mm]}
+    Gusfield provides an algorithm that constructs the Gomory-Hu Tree in an extremely easy manner by extrapolating some relaxations in the inital construction for the maintainence of Gomory-Hu Tree formation. We start with describing the Equivalent Flow Tree Program, after which adding just a single \textit{if statement} gives us a Cut Tree. Further, he shows that adding one more line of \textit{for loop} into the code computes the complete All-Pair Max. Flow matrix.
+
+    \vspace{5mm}
+    \noindent{\large \bf Part III: Dynamic Gomory-Hu Tree\\[1mm]}
+    The Dynamic Gomory-Hu Tree as proposed by Tanja Hartmann and Dorothea Wagner aims at maintaining Gomory-Hu trees also in evolving graphs. We consider a dynamic scenario where two cases of the underlying graph differ due an atomic edge change\footnote[1]{Edge weight increase, Edge weight decrease, edge insertion and edge deletion}. In the incremental scenarios, we are interested in updating the Gomory-Hu tree each time as efficiently as possible, as compared to constructing the whole tree from scratch.  
+    \enlargethispage{\baselineskip}
+
+     \section{Notations and Definitions on Graphs}
+     In this section, we present the notation used throughout the report and give definitions of most terms that occur. Some of the incidentally mentioned concepts however, are mentioned on that point only.
+
+    \vspace{5mm}
+    \noindent{\large \bf Undirected Graphs:} Apart from maximum flows which are usually considered in \textit{directed} graphs we only consider weighted \textit{undirected} graphs here. An undirected,weighted graph is a graph $G = (V,E,c)$ with vertices $V$, edges $E$ and a positive edge cost function $c:E\xrightarrow{}{R_0}^{+}$, writing $c(u,v)$ as a shorthand for $c({u,v})$ with $\{u,v\} \in E$. We will also be using $n:=|V|$ and $m:=|E|$ as obvious notations which will be clear from the context.
+
+    \vspace{5mm}
+    \noindent{\large \bf Special Cases:} We define a \textit{simple path} of $n$ vertices as a sequence $v_1,v_2,...,v_n$ of vertices such that $v_i \ne v_j$ for $i \ne j$, $\{i,j\}\subseteq {1,2,...,n}$ and $\{v_i,v_j\}$ forms an edge for $i=1,2,...,n-1$. A \textit{tree} is a connected acyclic graph. The path between two vertices of a tree is unique, and we write $\pi (u,v)$ for the path between $u$ and $v$.
+
+    \vspace{5mm}
+    \noindent{\large \bf Dynamic Graphs:} We call a graph \textit{dynamic} if its edges vary over time. Assume, change in graph $G$ either involves an edge $\{b,d\}$ with $c(b,d)= \Delta > 0$. If the cost of $\{b,d\}$ in $G$ decreases by $c(b,d) = \Delta > 0$, edge is deleted and resulting graph is termed $G^{\mathbin{\large\ominus}}$. Similarly, inserting $\{b,d\}$ or increasing the cost yields $G^\oplus$. We denote the cost function after a change by $c^{\mathbin{\large\ominus}}$ and $c^\oplus$ respectively. If we consider the graph after an arbitrary change, without any further information about the type of change, we denote it by $G^{\circledU}$ 
+    
+    \section{Cuts and Flows}
+    A \textit{cut} in an undirected weighted graph $G = (V,E,c)$ is a partition of $V$ into two non-empty \textit{cut sides} $S$ and $V \backslash S$. The cost $c(S,V \backslash S)$ of a cut in $G$ is the sum of the costs of all edges \textit{crossing} the cut, that is, edges $\{u,v\}$ with $u \in S, v \in V\backslash S$ also denoted as $c(S)$. A \textit{cut set} is the set of edges crossing the cut. Two cuts are said to be \textit{nested} if their cut sides are nested and \textit{non-crossing} if their cut sides are nested or the two cut sides are disjoint. A set of cuts is called \textit{non-crossing} if all cuts are pairwise non-crossing. A \textit{minimum u-v-cut} is a cut that separates \textit{u} and \textit{v} and is the cheapest cut among all cuts separating these vertices, denoted by $\lambda (u,v)$.
+
+    
+    From equivalence of $\lambda (u,v)$ and the \textit{value of maximum u-v-flow} in an undirected, weighted graph as stated by Ford-Fulkerson, computing minimum \textit{u-v}-cut in an undirected, weighted graph is basically same as computing maximum \textit{u-v-}flow in this graph. The best known complexity for solving the \textit{max flow - min cut} problem is $O(nm + n^2\log n$ by Nagamochi and Ibaraki.
+
+    \textbf{Flow} in $G$ between two vertices $s$ and $t$ is a function $f:E\xrightarrow{}R_0^{+}$ that satisfies:
+    \begin{enumerate}
+        \item {$f(e) \le c(e), \forall e\in E$}
+        \item {$\sum_{x\in N_i(v)}f(x,v) = \sum_{y\in N_o(v)}f(v,y), \forall v \in V\backslash \{s,t\}$}
+    \end{enumerate}
