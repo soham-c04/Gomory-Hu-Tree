@@ -41,32 +41,41 @@ int capacity(vi &a, vi &b){
 	return cMAX*exp(-c);
 }
 
-vector<vector<pair<int, long long>>> ImageToGraph(vector<vector<vi>> &image, bool diagonal_edges=false){
+vector<vector<pair<int, long long>>> ImageToGraph(vector<vector<vi>> &image, int neighborhood = 1, bool diagonal_edges=false, bool bipartite = false){
+	vector<pair<int,int>> edges;
+	if(diagonal_edges){						// Square of radius 2*neighborhood.
+		for(int dy=-neighborhood; dy<=neighborhood; dy++){
+		    for(int dx=0; dx<=neighborhood; dx++){
+		        if(dx==0 && dy<=0) continue;
+				if(bipartite && (!(abs(dx+dy)&1))) continue;
+				edges.pb({dx,dy});
+				if(dy) edges.pb({dx,-dy});
+			}
+		}
+	}
+	else{  									// Diamond with manhattan radius from origin as "neighborhood".
+		for(int n=1;n<=neighborhood;n++){
+			for(int dx=0;dx<=n;dx++){
+				int dy = n - dx;
+				if(bipartite && (!(abs(dx+dy)&1))) continue;
+				edges.pb({dx, dy});
+				if(dy) edges.pb({dx, -dy});
+			}
+		}
+	}
+	
 	int n = image.size(), m = image[0].size();
 	vector<vector<pair<int, long long>>> graph(n*m);
-	for(int i=0, cur=0;i<n;i++){
-		for(int j=0;j<m;j++, cur++){
-			if(i<n-1){
-				int V = capacity(image[i][j], image[i+1][j]);
-				graph[cur].pb({cur+m,V});
-				graph[cur+m].pb({cur,V});
-				if(diagonal_edges){
-					if(j>0){
-						int DL = capacity(image[i][j], image[i+1][j-1]);
-						graph[cur].pb({cur+m-1,DL});
-						graph[cur+m-1].pb({cur,DL});
-					}
-					if(j<m-1){
-						int DR = capacity(image[i][j], image[i+1][j+1]);
-						graph[cur].pb({cur+m+1,DR});
-						graph[cur+m+1].pb({cur,DR});
-					}
+	for(int i=0, u=0;i<n;i++){
+		for(int j=0;j<m;j++, u++){
+			for(auto [dx, dy]:edges){
+				int X = i+dx, Y = j+dy;
+				if(X>=0 && Y>=0 && X<n && Y<m){
+					int cap = capacity(image[i][j], image[X][Y]);
+					int v = X*m + Y;
+					graph[u].pb({v, cap});
+					graph[v].pb({u, cap});
 				}
-			}
-			if(j<m-1){
-				int H = capacity(image[i][j], image[i][j+1]);
-				graph[cur].pb({cur+1,H});
-				graph[cur+1].pb({cur,H});
 			}
 		}
 	}
@@ -74,6 +83,8 @@ vector<vector<pair<int, long long>>> ImageToGraph(vector<vector<vi>> &image, boo
 }
 
 cv::Scalar optimalBackground(vector<vector<vi>> &image, vi &cluster){
+	return cv::Scalar(255, 255, 255);   // White
+	
 	static const int MAX = 255;
 	long long background[2][image[0][0].size()];
 	memset(background, 0, sizeof(background));
@@ -89,8 +100,6 @@ cv::Scalar optimalBackground(vector<vector<vi>> &image, vi &cluster){
 	int R=((background[0][0]>background[1][0])? 0:MAX);
 	int G=((background[0][1]>background[1][1])? 0:MAX);
 	int B=((background[0][2]>background[1][2])? 0:MAX);
-	
-	R = G = B = 255; // White
 	
  	return cv::Scalar(B, G, R);
 }

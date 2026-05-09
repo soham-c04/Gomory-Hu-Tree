@@ -1,8 +1,9 @@
+//#include "../Push_Relabel_improved.cpp"
 #include "../Dinic.cpp"
 
 vector<vector<pair<int,ll>>> create_GHT(vector<vector<pair<int,ll>>> &input_graph){
+	int n = input_graph.size();
 	swap(graph, input_graph);
-	int n = graph.size();
 	int representative[n] = {0};
 	ll fl[n];
 

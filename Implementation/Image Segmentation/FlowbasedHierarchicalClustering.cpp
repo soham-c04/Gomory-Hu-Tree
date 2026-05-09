@@ -5,9 +5,9 @@
 #include <stack>
 const double FACTOR = 0.01;
 const int THRESHOLD = cMAX*FACTOR;  // Separate into clusters if maxflow(a,b) < THRESHOLD
-const int WINDOW = 2;           	// pixels*pixels per subgraph after initial clustering
-const int MIN_SIZE = 100;       	// Minimum number of pixels in a cluster
-long long flowTime = 0;
+const int WINDOW = 5;           	// pixels*pixels per subgraph after initial clustering
+const int MIN_SIZE = 50;	       	// Minimum number of pixels in a cluster
+long long flowTime = 0;             // Time spend computing maxFlow / creating GHT
 
 const bool DEBUG = false;
 void debug(const string &dbg, const bool condition=true){
@@ -20,6 +20,11 @@ void error(const string &err, int exit_code, bool condition){
 		exit(exit_code);
 	}
 }
+
+/*
+IMPORTANT NOTE:- Try various R,G,B Channels separately segmenting the image into different parts. And then taking some sort of
+union of those 3 channels.
+*/
 
 vector<vi> merge(vector<vi> clusters, vector<vector<pair<int,ll>>> &graph){
 	int n = graph.size();
@@ -80,13 +85,60 @@ vector<vi> partition(vector<vector<pair<int,ll>>> &T){  // Clustering only based
 	return parts;
 }
 
-vector<vi> GraphClustering(vector<vector<pair<int,ll>>> graph, const int cols){
+bool checkBipartite(vector<vector<pair<int,ll>>> &graph){
+	int n = graph.size();
+	int col[n];
+	memset(col,-1,sizeof(col));
+	stack<int> stk;
+	col[0] = 0;
+	stk.push(0);
+	while(stk.size()){
+		int u = stk.top();
+		stk.pop();
+		for(auto [v,w]:graph[u]){
+			if(col[v]==-1){
+				col[v] = 1-col[u];
+				stk.push(v);
+			}
+			else if(col[u] == col[v]){
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+vector<vi> GraphClustering(vector<vector<pair<int,ll>>> graph, const int cols, bool bi = false){
 	vector<vector<pair<int,ll>>> original_graph = graph;
 	const int n = graph.size();
+	int edges = 0;
+	for(int i=0;i<n;i++) edges+=graph[i].size();
+	edges/=2;
+	
 	const int rows=n/cols;
 	int subgraphs = ceil(rows,WINDOW)*ceil(cols,WINDOW);
 	vector<vi> nodes(subgraphs);    // Stores the set of nodes in each local subgraph G'_i,m
 	vi partof(n,-1);       			// Stores "which" subgraph, each node is a part of.
+	
+	bool bipartite = bi && checkBipartite(graph);
+	int col[n] = {0};
+	if(bipartite){
+		cout<<"\nInput Graph is Bipartite"<<endl;
+		memset(col,-1,sizeof(col));
+		stack<int> stk;
+		col[0] = 0;
+		stk.push(0);
+		while(stk.size()){
+			int u = stk.top();
+			stk.pop();
+			for(auto [v,w]:graph[u]){
+				if(col[v]==-1){
+					col[v] = 1-col[u];
+					stk.push(v);
+				}
+			}
+		}
+	}
 
 	/* --- Step 1: Partition G into number of small subgraphs --- */
 	// O(n) amortized [n = number of nodes in the graph]
@@ -100,12 +152,13 @@ vector<vi> GraphClustering(vector<vector<pair<int,ll>>> graph, const int cols){
 	}
 
 	vi original(n);          	// Mapping condensed (root) node to original nodes
-	vector<pair<int,ll>> t0[n];	// Condensed part of orignial tree
+	vector<pair<int,ll>> t0[n];	// Condensed part of original tree
 	for(int i=0;i<n;i++) original[i]=i;
 
 	int total_node_condensations=0, total_edge_condensations=0;
 	const int BRUTE = 1;
-	for(int i=0;i<10 && subgraphs>1;i++){
+	// Stop after calculated number of iterations
+	for(int i=0;i<5 && subgraphs>1;i++){
 		int n1 = n-total_node_condensations;// Number of nodes in G_i
 		if(n1<BRUTE) break;
 		cout<<"\nLevel "<<i<<":  "<<subgraphs<<" subgraphs  -  ";
@@ -177,24 +230,33 @@ vector<vi> GraphClustering(vector<vector<pair<int,ll>>> graph, const int cols){
 			int root0=-1;   						// Vertex for starting dfs() to find "maximal_internal_branch"
 			for(int S=0;S<ni;S++){
 				if(vis[S]) continue;
-				vi components;		                // Components under the same condensed root
 				stack<int> stk;
 				stk.push(S);
 				vis[S] = true;
-				int s = decompress[S];
-				int s0 = original[s];
-				bool internal_ = true;
+				vi components[2];	                // Components under the same condensed root
+				bool internal_[2] = {true, true};
+				int r[2] = {-1, -1};
+				int R[2] = {-1, -1};
+				int s0 = original[decompress[S]];
+				r[col[s0]] = s0;
+				R[col[s0]] = S;
 				while(stk.size()){
 					int U = stk.top();
 					stk.pop();
-					components.pb(U);
 					int u0 = original[decompress[U]];
-					if(u0!=s0){
-						t0[s0].pb({u0, THRESHOLD});
-						t0[u0].pb({s0, THRESHOLD});
+					int c = col[u0];
+					components[c].pb(U);
+					int r0 = r[c], R_ = R[c];
+					if(r0==-1){
+						r[c] = u0;
+						R_ = R[c] = U;
 					}
-					root[U] = S;
-					internal_ = internal_&&internal[U];
+					else if(u0!=r0){
+						t0[r0].pb({u0, THRESHOLD});
+						t0[u0].pb({r0, THRESHOLD});
+					}
+					root[U] = R_;
+					internal_[c] = internal_[c]&&internal[U];
 					for(auto [V,capacity]:T_i_m[U]){
 						if((!vis[V]) && (capacity>=THRESHOLD)){        // Condense v into u
 							vis[V] = true;
@@ -202,7 +264,7 @@ vector<vi> GraphClustering(vector<vector<pair<int,ll>>> graph, const int cols){
 						}
 					}
 				}
-				for(int C:components) internal[C] = internal_;
+				for(int c=0;c<2;c++) for(int C:components[c]) internal[C] = internal_[c];
 				if(!internal[S]) root0=S;
 			}
 			debug("Step 3(i) completed",i==di && m==dm);
@@ -286,11 +348,12 @@ vector<vi> GraphClustering(vector<vector<pair<int,ll>>> graph, const int cols){
 		graph.resize(n2);
 		for(int u_c=0;u_c<n2;u_c++){
 			for(auto [v_c,capacity]:G_c[u_c]){
-				int comp = sz[u_c][v_c];
+				int comp = sz[u_c][v_c];    // Modification: Avg capacity of condensed node
 				graph[u_c].pb({v_c, capacity/comp});
 				graph[v_c].pb({u_c, capacity/comp});
 			}
 		}
+		error("Graph bipartiteness broken", 5, bipartite && (!checkBipartite(graph)));
 		
 		/* --- Step 5: Group subgraphs by joining inter-subgraph arcs: G_i_c -> G_(i+1) --- */
 		// O(n2 + e2)
@@ -326,14 +389,14 @@ vector<vi> GraphClustering(vector<vector<pair<int,ll>>> graph, const int cols){
 		swap(original, original_c);
 
 		// Percentage condensation signifies - percentage of nodes/edges "in G_i" that were condensed. NOT in original graph.
-		printf("%d (%.2f %%) nodes condensed  -  %d (%.2f %%) edges condensed\n",node_condensations,node_condensations*100.00/n1,edge_condensations,edge_condensations*100.00/(2*rows*cols-rows-cols-total_edge_condensations));
+		printf("%d (%.2f %%) nodes condensed  -  %d (%.2f %%) edges condensed\n",node_condensations,node_condensations*100.00/n1,edge_condensations,edge_condensations*100.00/(edges-total_edge_condensations));
 		fflush(stdout);
 		total_node_condensations += node_condensations;
 		total_edge_condensations += edge_condensations;
 	}
 
-	printf("\nTotal:  %d (%.2f %%) nodes condensed  -  %d (%.2f %%) edges condensed\n",total_node_condensations,total_node_condensations*100.00/n,total_edge_condensations,total_edge_condensations*100.00/(2*rows*cols-rows-cols));
-	cout<<"\nRemaining: Nodes = "<<n-total_node_condensations<<"	Edges = "<<2*rows*cols-rows-cols-total_edge_condensations<<endl;
+	printf("\nTotal:  %d (%.2f %%) nodes condensed  -  %d (%.2f %%) edges condensed\n",total_node_condensations,total_node_condensations*100.00/n,total_edge_condensations,total_edge_condensations*100.00/edges);
+	cout<<"\nRemaining: Nodes = "<<n-total_node_condensations<<"	Edges = "<<edges-total_edge_condensations<<endl;
 
 	/* --- Step 4: Create T'*_c if only one subgraph remains --- */
 	auto start_time = chrono::high_resolution_clock::now();
@@ -375,7 +438,7 @@ int main(int argc, char *argv[]){
 	cout<<"\nSuccessfully decoded image"<<endl;
 
 	cout<<"\nClustering..."<<endl;
-    vector<vector<pair<int,ll>>> graph = ImageToGraph(image);
+    vector<vector<pair<int,ll>>> graph = ImageToGraph(image, 5, true, false);
 
     auto start_time = chrono::high_resolution_clock::now();
 	vector<vector<int>> clusters = GraphClustering(graph, image[0].size());
